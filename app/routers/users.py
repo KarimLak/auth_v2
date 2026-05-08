@@ -1,4 +1,6 @@
 
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -16,3 +18,9 @@ def get_me(username: str = Depends(get_current_user), db: Session = Depends(get_
         raise HTTPException(status_code=500, detail= "User not found")
     return user
 
+@router.get("/all", response_model=List[UserResponse])
+def get_all(username: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    users = db.execute(select(User)).scalars().all()
+    if not users:
+        raise HTTPException(status_code=500, detail= "Users not found")
+    return users
