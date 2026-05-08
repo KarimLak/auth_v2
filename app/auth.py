@@ -23,7 +23,7 @@ def create_token(data: dict) -> str:
 def verify_token(token: str) -> str:
     try:
         payload = jwt.decode(token, os.getenv('SECRET_KEY'), os.getenv('ALGORITHM'))
-        username = payload.get("sub")
+        username = payload.get("")
         if not username:
             raise HTTPException(status_code=401, detail= "Invalid token")
         return username

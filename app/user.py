@@ -2,9 +2,9 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.auth import hash_password
+from app.auth import create_token, hash_password, verify_password
 from app.models import User
-from app.schemas import UserLogin, UserRegister, UserResponse
+from app.schemas import TokenResponse, UserLogin, UserRegister, UserResponse
 
 
 class UserService:
@@ -20,7 +20,11 @@ class UserService:
         return user
     
     def login(payload: UserLogin, db: Session) -> UserResponse:
-        return 1
+        user = db.execute(select(User).where(User.email == payload.email)).scalars.one_or_none()
+        if not user or (verify_password(payload.password, user.hashed_password) is False):
+            raise HTTPException(status_code= 500, detail= "Wrong information")
+        token = create_token({"sub": user.username})
+        return TokenResponse(access_token=token)
 
 def get_user_service() -> UserService:
     return UserService()
