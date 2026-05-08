@@ -1,5 +1,13 @@
-from pydantic import BaseModel, Field
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
 
-class UserRequest(BaseModel):
-    username: str = Field(..., ge=0, le=255)
-    password: str = Field(..., ge=0, le=255)
+from app.database import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    username: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    hashed_password: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    is_active: Mapped[bool] = mapped_column(bool, unique=True, default=True)
