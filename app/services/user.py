@@ -30,7 +30,7 @@ class UserService:
     
     def logout(payload: TokenResponse, db: Session):
         existing = db.execute(select(BlackList).where(or_(BlackList.access_token == payload.access_token, 
-                                                          BlackList.refresh_token == payload.refresh_token)))
+                                                          BlackList.refresh_token == payload.refresh_token))).scalars().one_or_none()
         if existing:
             raise HTTPException(status_code=500, detail="Token already deleted")
         blacklist = BlackList(access_token = payload.access_token, refresh_token = payload.refresh_token)

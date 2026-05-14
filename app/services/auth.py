@@ -5,9 +5,12 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from jose import jwt, JWTError
+from sqlalchemy.orm import Session
 
 from app.schemas.user import RefreshRequest
+from auth_v2.app.database import get_db
 from auth_v2.app.schemas.token import TokenResponse
+from auth_v2.app.services.blacklist import is_black_list_token
 
 load_dotenv() 
 pwd_context = CryptContext(schemes=["bcrypt"])
@@ -39,6 +42,8 @@ def refresh_token(payload: RefreshRequest) -> TokenResponse:
 
 def verify_token(token: str, expected_type: str = "access") -> str:
     try:
+        if (is_black_list_token(token)):
+            return HTTPException(status=500, detail="Invalid token")
         payload = jwt.decode(token, os.getenv('SECRET_KEY'), os.getenv('ALGORITHM'))
         username = payload.get("sub")
         if not username:
@@ -50,4 +55,4 @@ def verify_token(token: str, expected_type: str = "access") -> str:
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def get_current_user(token: str = Depends(oauth2_scheme)) -> str:
-    return verify_token(token)
+    return verify_token(token, db)
