@@ -24,17 +24,17 @@ def verify_password(password: str, hashed: str) -> bool:
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.utcnow() + datetime.timedelta(minutes=os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": os.getenv("ACCESS_TYPE")})
     return jwt.encode(to_encode, os.getenv('SECRET_KEY'), os.getenv('ALGORITHM'))
 
 def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.utcnow() + datetime.timedelta(days=os.getenv('REFRESH_TOKEN_EXPIRE_DAYS'))
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": os.getenv("REFRESH_TYPE")})
     return jwt.encode(to_encode, os.getenv('SECRET_KEY')), os.getenv('ALGORITHM')
 
 def refresh_token(payload: RefreshRequest) -> TokenResponse:
-    username = verify_token(payload.refresh_token)
+    username = verify_token(payload.refresh_token, os.getenv("REFRESH_TYPE"))
     if not username:
         raise HTTPException(status=500, detail='logout')
     access_token = create_access_token({"sub": username})
@@ -46,7 +46,8 @@ def verify_token(token: str, expected_type: str = "access") -> str:
             return HTTPException(status=500, detail="Invalid token")
         payload = jwt.decode(token, os.getenv('SECRET_KEY'), os.getenv('ALGORITHM'))
         username = payload.get("sub")
-        if not username:
+        type = payload.get("type")
+        if not username or type != expected_type:
             raise HTTPException(status_code=401, detail= "Invalid token")
         return username
     except JWTError:
