@@ -21,8 +21,8 @@ def login(request: Request, payload: UserLogin, db: Session = Depends(get_db), s
 
 @router.post('/refresh', response_model=TokenResponse)
 @limiter.limit("5/minute")
-def refresh(request: Request, payload: RefreshRequest, service: UserService = Depends(get_user_service)):
-    return service.refresh_token(payload)
+def refresh(request: Request, payload: RefreshRequest, service: UserService = Depends(get_user_service), db: Session = Depends(get_db)):
+    return service.refresh_token(payload, db)
 
 @router.post("/logout", response_model=dict)
 @limiter.limit("5/minute")

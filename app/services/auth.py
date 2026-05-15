@@ -33,16 +33,16 @@ def create_refresh_token(data: dict) -> str:
     to_encode.update({"exp": expire, "type": os.getenv("REFRESH_TYPE")})
     return jwt.encode(to_encode, os.getenv('SECRET_KEY'), algorithm=os.getenv('ALGORITHM'))
 
-def refresh_token(payload: RefreshRequest) -> TokenResponse:
-    username = verify_token(payload.refresh_token, os.getenv("REFRESH_TYPE"))
+def refresh_token(payload: RefreshRequest, db: Session) -> TokenResponse:
+    username = verify_token(payload.refresh_token, db, os.getenv("REFRESH_TYPE"))
     if not username:
         raise HTTPException(status_code=500, detail='logout')
     access_token = create_access_token({"sub": username})
     return TokenResponse(access_token=access_token, refresh_token=payload.refresh_token)
 
-def verify_token(token: str, expected_type: str = "access") -> str:
+def verify_token(token: str, db: Session, expected_type: str = "access") -> str:
     try:
-        if (is_black_list_token(token)):
+        if (is_black_list_token(token, db)):
             return HTTPException(status_code=500, detail="Invalid token")
         payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithm=os.getenv('ALGORITHM'))
         username = payload.get("sub")
@@ -55,5 +55,5 @@ def verify_token(token: str, expected_type: str = "access") -> str:
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
-def get_current_user(token: str = Depends(oauth2_scheme)) -> str:
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> str:
     return verify_token(token)
