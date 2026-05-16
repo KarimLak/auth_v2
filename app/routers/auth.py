@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.schemas.user import UserLogin, UserRegister, UserResponse
-from app.schemas.token import RefreshRequest, TokenResponse
+from app.schemas.token import LogoutRequest, RefreshRequest, TokenResponse
 from app.services.token import refresh_token
 from app.limiter import limiter
 from app.services.user import register, login, logout
@@ -27,7 +27,7 @@ def refresh(request: Request, payload: RefreshRequest, db: Session = Depends(get
 
 @router.post("/logout", response_model=dict)
 @limiter.limit("5/minute")
-def logout_user(request: Request, payload : TokenResponse, db: Session = Depends(get_db)):
+def logout_user(request: Request, payload : LogoutRequest, db: Session = Depends(get_db)):
     logout(payload, db)
     return {"message": "Logged out successfully"}
 

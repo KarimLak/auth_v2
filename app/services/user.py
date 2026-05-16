@@ -8,7 +8,7 @@ from app.services.token import create_access_token, create_refresh_token, verify
 from app.services.password import hash_password, verify_password
 from app.models.user import User
 from app.schemas.user import UserLogin, UserRegister, UserResponse
-from app.schemas.token import RefreshRequest, TokenResponse
+from app.schemas.token import LogoutRequest, RefreshRequest, TokenResponse
 from app.models.blacklist import BlackList
 
 def register(payload: UserRegister, db: Session) -> UserResponse:
@@ -25,7 +25,7 @@ def login(payload: UserLogin, db: Session) -> TokenResponse:
     refresh_token = create_refresh_token({"sub": user.username})
     return TokenResponse(access_token=access_token, refresh_token=refresh_token)
     
-def logout(payload: TokenResponse, db: Session):
+def logout(payload: LogoutRequest, db: Session):
     existing = get_blacklist_token(payload.refresh_token, db)
     if existing:
         raise HTTPException(status_code=500, detail="Token already deleted")

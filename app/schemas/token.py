@@ -10,4 +10,7 @@ class RefreshRequest(BaseModel):
     refresh_token: str
     token_type: str = "bearer"
 
+class LogoutRequest(RefreshRequest):
+    pass
+
     
