@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from passlib.context import CryptContext
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
@@ -13,13 +12,6 @@ from app.schemas.token import TokenResponse
 from app.services.blacklist import is_black_list_token
 
 load_dotenv() 
-pwd_context = CryptContext(schemes=["bcrypt"])
-
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
-
-def verify_password(password: str, hashed: str) -> bool:
-    return pwd_context.verify(password, hashed)
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
@@ -44,7 +36,7 @@ def verify_token(token: str, db: Session, expected_type: str = "access") -> str:
     try:
         if (is_black_list_token(token, db)):
             return HTTPException(status_code=500, detail="Invalid token")
-        payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithm=os.getenv('ALGORITHM'))
+        payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=os.getenv('ALGORITHM'))
         username = payload.get("sub")
         type = payload.get("type")
         if not username or type != expected_type:

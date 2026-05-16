@@ -5,7 +5,6 @@ from sqlalchemy import or_, select
 from app.database import get_db
 from app.models.blacklist import BlackList
 
-
 def is_black_list_token(token: str, db : Session) -> bool:
     blacklisttoken = db.execute(select(BlackList).where(or_(BlackList.access_token == token, BlackList.refresh_token == token))).scalars().one_or_none()
     if blacklisttoken:
