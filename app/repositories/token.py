@@ -12,3 +12,4 @@ def add_blacklist_token(refresh_token: str, db: Session):
     db.add(blacklist)
     db.commit()
     db.refresh(blacklist)
+
