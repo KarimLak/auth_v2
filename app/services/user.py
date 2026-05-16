@@ -29,4 +29,4 @@ def logout(payload: TokenResponse, db: Session):
     existing = get_blacklist_token(payload.refresh_token, db)
     if existing:
         raise HTTPException(status_code=500, detail="Token already deleted")
-    add_blacklist_token(payload.access_token, payload.refresh_token, db)
+    add_blacklist_token(payload.refresh_token, db)
