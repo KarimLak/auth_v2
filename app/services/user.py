@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
+from app.repositories.token import add_blacklist_token, get_blacklist_token
 from app.repositories.user import create_user, get_user
 from app.services.token import create_access_token, create_refresh_token, verify_token
 from app.services.password import hash_password, verify_password
@@ -25,12 +26,7 @@ def login(payload: UserLogin, db: Session) -> TokenResponse:
     return TokenResponse(access_token=access_token, refresh_token=refresh_token)
     
 def logout(payload: TokenResponse, db: Session):
-    existing = db.execute(select(BlackList).where(or_(BlackList.access_token == payload.access_token, 
-                                                        BlackList.refresh_token == payload.refresh_token))).scalars().one_or_none()
+    existing = get_blacklist_token(payload.refresh_token, db)
     if existing:
         raise HTTPException(status_code=500, detail="Token already deleted")
-    blacklist = BlackList(access_token = payload.access_token, refresh_token = payload.refresh_token)
-    db.add(blacklist)
-    db.commit()
-    db.refresh(blacklist)
-        
+    add_blacklist_token(payload.access_token, payload.refresh_token, db)
