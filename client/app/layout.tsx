@@ -1,5 +1,6 @@
 import { AuthProvider } from "./context/AuthContext"
 import { ReactNode } from "react"
+import "./globals.css"
 
 export const metadata = { title: "auth_v2" }
 
