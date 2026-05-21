@@ -68,3 +68,8 @@ class ContractBase(BaseModel):
     contact_nom:       Optional[str] = Field(default=None, max_length=255)
     contact_email:     Optional[str] = Field(default=None, max_length=255)
     contact_telephone: Optional[str] = Field(default=None, max_length=100)
+
+class ContractResponse(ContractBase):
+    id: str = Field(..., ge=0)
+
+    model_config = {"from_attributes": True}
