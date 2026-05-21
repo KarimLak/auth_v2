@@ -1,5 +1,5 @@
 from fastapi import Depends
-from niquests import Session
+from sqlalchemy.orm import Session
 from sqlalchemy import or_, select
 from app.database import get_db
 from app.models.blacklist import BlackList

@@ -1,6 +1,15 @@
 from typing import Optional
 from pydantic import BaseModel, Field
 
+class ContractFilter(BaseModel):
+    type_avis:        str = Field(..., max_length=100)  
+    statut:           str = Field(..., max_length=100)   
+    nature_contrat: str = Field(..., max_length=255)     
+    categorie:    str = Field(..., max_length=500)        
+    region:      str = Field(..., max_length=255)
+    date_publication:           str = Field(..., max_length=100)
+    date_fermeture:             Optional[str] = Field(default=None, max_length=255)
+
 class Document(BaseModel):
     titre: Optional[str] = Field(default=None, max_length=500)
     type: Optional[str] = Field(default=None, max_length=255)
