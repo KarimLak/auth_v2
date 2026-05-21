@@ -15,7 +15,6 @@ class Document(Base):
     langue: Mapped[str] = mapped_column(String(255), nullable=False)
     dimension: Mapped[str] = mapped_column(String(255), nullable=False)
     nombre_page: Mapped[str] = mapped_column(String(255), nullable=False)
-    visualiser: Mapped[str] = mapped_column(String(255), nullable=False)
 
 
 class Contract(Base):

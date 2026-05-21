@@ -8,7 +8,6 @@ class Document(BaseModel):
     langue: str = Field(..., max_length=255)
     dimension: str = Field(..., max_length=255)
     nombre_page: str = Field(..., max_length=255)
-    visualiser: str = Field(..., max_length=255)
 
 class ContractBase(BaseModel):
     # ── Identity ──────────────────────────────────────────────────────────────
