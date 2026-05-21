@@ -53,7 +53,6 @@ class Contract(Base):
     date_limite_interet:        Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     date_ouverture_soumissions: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     date_conclusion:            Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    delai_offres:               Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
     # ── Contract terms ────────────────────────────────────────────────────────
     duree_contrat:              Mapped[Optional[str]] = mapped_column(String(50),   nullable=True)

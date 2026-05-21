@@ -40,7 +40,6 @@ class ContractBase(BaseModel):
     date_limite_interet:        Optional[str] = Field(default=None, max_length=100)
     date_ouverture_soumissions: Optional[str] = Field(default=None, max_length=100)
     date_conclusion:            Optional[str] = Field(default=None, max_length=100)
-    delai_offres:               Optional[str] = Field(default=None, max_length=255)
 
     # ── Contract terms ────────────────────────────────────────────────────────
     duree_contrat:              Optional[str] = Field(default=None, max_length=50)
