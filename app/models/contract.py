@@ -9,12 +9,12 @@ class Document(Base):
     __tablename__ = "documents"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    titre: Mapped[str] = mapped_column(String(255), nullable=False)
-    type: Mapped[str] = mapped_column(String(255), nullable=False)
-    contenu: Mapped[str] = mapped_column(String(255), nullable=False)
-    langue: Mapped[str] = mapped_column(String(255), nullable=False)
-    dimension: Mapped[str] = mapped_column(String(255), nullable=False)
-    nombre_page: Mapped[str] = mapped_column(String(255), nullable=False)
+    titre: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    type: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    contenu: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    langue: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    dimension: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    nombre_page: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
 
 class Contract(Base):
@@ -67,7 +67,7 @@ class Contract(Base):
     endroit_reception:       Mapped[Optional[str]] = mapped_column(String(500),  nullable=True)
     endroit_ouverture:       Mapped[Optional[str]] = mapped_column(String(500),  nullable=True)
     adjudication_par_lot:    Mapped[Optional[str]] = mapped_column(String(50),   nullable=True)
-    remarque:                Mapped[Optional[str]] = mapped_column(String(2000), nullable=True)
+    remarque:                Mapped[Optional[str]] = mapped_column(String(20000), nullable=True)
 
     # ── Bid guarantee ─────────────────────────────────────────────────────────
     garantie_nature: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)

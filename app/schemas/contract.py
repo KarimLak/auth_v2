@@ -2,12 +2,12 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 class Document(BaseModel):
-    titre: str = Field(..., max_length=255)
-    type: str = Field(..., max_length=255)
-    contenu: str = Field(..., max_length=255)
-    langue: str = Field(..., max_length=255)
-    dimension: str = Field(..., max_length=255)
-    nombre_page: str = Field(..., max_length=255)
+    titre: Optional[str] = Field(default=None, max_length=500)
+    type: Optional[str] = Field(default=None, max_length=255)
+    contenu: Optional[str] = Field(default=None, max_length=255)
+    langue: Optional[str] = Field(default=None, max_length=100)
+    dimension: Optional[str] = Field(default=None, max_length=255)
+    nombre_page: Optional[str] = Field(default=None, max_length=50)
 
 class ContractBase(BaseModel):
     # ── Identity ──────────────────────────────────────────────────────────────
@@ -54,7 +54,7 @@ class ContractBase(BaseModel):
     endroit_reception:       Optional[str] = Field(default=None, max_length=500)
     endroit_ouverture:       Optional[str] = Field(default=None, max_length=500)
     adjudication_par_lot:    Optional[str] = Field(default=None, max_length=50)
-    remarque:                Optional[str] = Field(default=None, max_length=2000)
+    remarque:                Optional[str] = Field(default=None, max_length=20000)
 
     # ── Bid guarantee ─────────────────────────────────────────────────────────
     garantie_nature: Optional[str] = Field(default=None, max_length=500)
@@ -69,6 +69,6 @@ class ContractBase(BaseModel):
     contact_telephone: Optional[str] = Field(default=None, max_length=100)
 
 class ContractResponse(ContractBase):
-    id: str = Field(..., ge=0)
+    id: int = Field(..., ge=0)
 
     model_config = {"from_attributes": True}
