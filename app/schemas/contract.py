@@ -1,5 +1,20 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field
+from enum import Enum
+from typing import Optional
+
+class ContractSortField(str, Enum):
+    type_avis = "type_avis"
+    statut = "statut"
+    nature_contrat = "nature_contrat"
+    categorie = "categorie"
+    region = "region"
+    date_publication = "date_publication"
+    date_fermeture = "date_fermeture"
+    
+class SortOrder(str, Enum):
+    asc = "asc"
+    desc = "desc"
 
 class ContractFilter(BaseModel):
     type_avis: Optional[str] = Field(None, max_length=100)  
@@ -85,6 +100,8 @@ class ContractResponse(ContractBase):
 class ContractFilterResponse(BaseModel):
     skip: int = Field(0, ge=0)
     limit: int = Field(20, ge=1, le=100)
+    sort_by: SortOrder = Field(ContractSortField.date_publication)
+    sort_order: ContractSortField = Field(SortOrder.desc)
     contracts: Optional[List[ContractResponse]]
 
     model_config = {"from_attributes": True}
