@@ -1,9 +1,10 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "../../context/AuthContext"
 import PublicNav from "@/components/PublicNav"
+
 
 export default function Login() {
   const { login } = useAuth()
@@ -11,6 +12,14 @@ export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" })
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const { user, loading: authLoading} = useAuth()
+
+
+  useEffect(() => {
+  if (!authLoading && user) {
+    router.push("/dashboard")  // already logged in → skip login page
+  }
+}, [user, authLoading, router])
 
   const submit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
@@ -25,6 +34,8 @@ export default function Login() {
       setLoading(false)
     }
   }
+
+  
 
   return (
     <>

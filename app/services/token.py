@@ -6,7 +6,6 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
-from app.schemas.token import RefreshRequest
 from app.database import get_db
 from app.schemas.token import TokenResponse
 from app.services.blacklist import is_black_list_token
@@ -25,12 +24,12 @@ def create_refresh_token(data: dict) -> str:
     to_encode.update({"exp": expire, "type": os.getenv("REFRESH_TYPE")})
     return jwt.encode(to_encode, os.getenv('SECRET_KEY'), algorithm=os.getenv('ALGORITHM'))
 
-def refresh_token(payload: RefreshRequest, db: Session) -> TokenResponse:
-    username = verify_token(payload.refresh_token, db, os.getenv("REFRESH_TYPE"))
+def new_refresh_token(refresh_token: str, db: Session) -> TokenResponse:
+    username = verify_token(refresh_token, db, os.getenv("REFRESH_TYPE"))
     if not username:
         raise HTTPException(status_code=500, detail='logout')
     access_token = create_access_token({"sub": username})
-    return TokenResponse(access_token=access_token, refresh_token=payload.refresh_token)
+    return TokenResponse(access_token=access_token)
 
 def verify_token(token: str, db: Session, expected_type: str = "access") -> str:
     try:
