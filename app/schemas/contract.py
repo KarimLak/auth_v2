@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from typing import Optional
 
-from auth_v2.app.type.tender import TenderCategory, TenderNature, TenderRegion, TenderStatus, TenderType
+from app.type.tender import TenderCategory, TenderNature, TenderRegion, TenderStatus, TenderType
 
 
 class ContractSortField(str, Enum):
