@@ -11,6 +11,8 @@ def get_contracts_list(filters: dict, skip: int, limit: int, sort_by: ContractSo
         column = getattr(Contract, k, None)
 
         if column is not None:
+            if (i=='all'):
+                continue
             query = query.where(column==i)
 
     order_column = getattr(Contract, sort_by.value)

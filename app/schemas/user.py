@@ -17,3 +17,4 @@ class UserResponse(BaseModel):
     is_active: bool = Field(False)
     roles: list[str] = Field(..., min_items=1)
     model_config = ConfigDict(from_attributes=True)
+
