@@ -10,8 +10,8 @@ class BuisnessProfile(BaseModel):
     expertise: List[str]
     region: List[TenderRegion]
     size: int = Field(..., le=0, ge=10000)
-    budget_min: int = Field(..., le=0, ge=10000000)
-    budget_max: int = Field(..., le=0, ge=10000001)
+    budget_min: int = Field(..., ge=0, le=10000000)
+    budget_max: int = Field(..., ge=0, le=10000001)
 
 class BuisnessProfileCreate(BuisnessProfile):
     pass

@@ -1,14 +1,13 @@
-from fastapi import APIRouter
-from auth_v2.app import limiter 
+from typing import Annotated
+from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, Path
+from app import limiter
+from app.database import get_db
+from app.schemas.profile import BuisnessProfileResponse 
 
 router = APIRouter(prefix='/profile')
 
-@router.post('/')
+@router.get('/{business_id}', response_model=BuisnessProfileResponse)
 @limiter.limit("10/minute")
-def create_profile():
-    return 1
-
-@router.get('/')
-@limiter.limit("10/minute")
-def get_profile():
-    return 1
+def get_business_profile(business_id: Annotated[int, Path(ge=0)], db: Session = Depends(get_db)):
+    return get_business_profile(business_id, db)
