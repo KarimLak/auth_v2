@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.schemas.profile import BusinessProfileCreate
+
 class UserLogin(BaseModel):
     username: str = Field(..., min_length=1, max_length=255)
     password: str = Field(..., min_length=1, max_length=255)
@@ -9,7 +11,7 @@ class UserRegister(BaseModel):
     email: str = Field(..., min_length=1, max_length=255)
     password: str = Field(..., min_length=1, max_length=255)
     roles: list[str] =  Field(default_factory=lambda: ["user"], min_length=1)
-    business_id: int = Field(..., ge=0)
+    business: BusinessProfileCreate 
 
 class UserResponse(BaseModel):
     id: int = Field(..., ge=0)
