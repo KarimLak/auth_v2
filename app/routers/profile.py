@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, Path
 from app import limiter
 from app.database import get_db
-from app.schemas.profile import BusisnessProfileResponse 
+from app.schemas.profile import BusinessProfileResponse 
 
 router = APIRouter(prefix='/profile')
 
